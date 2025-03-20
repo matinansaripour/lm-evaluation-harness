@@ -2,6 +2,8 @@
 task: nytimes_verbatim
 
 dataset_path: "mansaripo/nytimes_verbatim"
+validation_split: 'test'
+test_split: 'test'
 
 doc_to_text: "{{input_text}}"
 doc_to_target: "{{target_text}}"
