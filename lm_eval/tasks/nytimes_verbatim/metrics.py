@@ -1,5 +1,4 @@
 from typing import List, Tuple, Dict, Any, Union
-from lm_eval.api.registry import register_metric
 
 def longestCommonSubstr(s1, s2):
     m = len(s1)

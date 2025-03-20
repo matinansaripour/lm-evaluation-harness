@@ -1,10 +1,7 @@
 
-task: robots_verbatim
+task: nytimes_verbatim
 
-dataset_path: arrow
-dataset_name: null
-dataset_kwargs:
-  data_files: /iopsstor/scratch/cscs/ansaripo/data/nytimes_verbatim
+dataset_path: "mansaripo/nytimes_verbatim"
 
 doc_to_text: "{{input_text}}"
 doc_to_target: "{{target_text}}"
