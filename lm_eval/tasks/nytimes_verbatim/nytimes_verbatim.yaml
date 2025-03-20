@@ -10,7 +10,6 @@ generation_kwargs:
   # max_new_tokens: 3968
   do_sample: false
   temperature: 0.0
-num_fewshot: 0
 
 
 metric_list:
