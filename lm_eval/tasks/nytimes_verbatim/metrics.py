@@ -20,9 +20,9 @@ def longestCommonSubstr(s1, s2):
         prev = curr
     return float(res)
 
-def lccs(items):
+def lccs(references, predictions, **kwargs):
     scores = []
-    for pred, ref in items:
+    for pred, ref in zip(predictions, references):
         pred = pred.strip()
         ref = ref.strip()
         pred = " ".join(pred.split())
