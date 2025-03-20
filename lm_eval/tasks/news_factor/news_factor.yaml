@@ -1,0 +1,22 @@
+task: news_factor
+task_alias: "NEWS-FACTOR"
+
+dataset_path: "mansaripo/NEWS-FACTOR"
+
+process_docs: !function utils.process_docs
+
+doc_to_text: "{{full_prefix}}"
+doc_to_target: 0
+doc_to_choice: "{{[completion, contradiction_0, contradiction_1, contradiction_2]}}"
+
+output_type: multiple_choice
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+  - metric: acc_norm
+    aggregation: mean
+    higher_is_better: true
+
+metadata:
+  version: 1.0
