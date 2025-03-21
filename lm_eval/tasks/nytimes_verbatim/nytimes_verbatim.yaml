@@ -25,12 +25,12 @@ metric_list:
       - ","
       - "\\$"
   - metric: bleu
+    aggregation: bleu
+    higher_is_better: true
+    # n_gram: 4  # BLEU-4
+  - metric: !function metrics.lccs
     aggregation: mean
     higher_is_better: true
-    n_gram: 4  # BLEU-4
-  # - metric: !function metrics.lccs
-  #   aggregation: mean
-  #   higher_is_better: true
 
 # Metadata
 metadata:
