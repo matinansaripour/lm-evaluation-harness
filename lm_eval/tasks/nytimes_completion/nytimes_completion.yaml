@@ -1,6 +1,6 @@
-task: ntyimes_completion
+task: nytimes_completion
 
-dataset_path: "mansaripo/ntyimes_completion"
+dataset_path: "mansaripo/nytimes_completion"
 
 validation_split: 'test'
 test_split: 'test'
