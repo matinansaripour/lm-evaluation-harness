@@ -1,0 +1,6 @@
+group: robots_eval
+task:
+  - nytimes_verbatim
+
+metadata:
+  version: 1.0
