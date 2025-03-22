@@ -5,6 +5,7 @@ import random
 import requests
 from openai import OpenAI
 from datasets import load_dataset
+from datasets import Dataset, DatasetDict
 
 
 MODEL_NAME = "deepseek-reasoner"
@@ -204,11 +205,13 @@ def main():
                 json.dump(pre_questions, f, indent=4)
             with open(failed_output_file, "w") as f:
                 json.dump(failed, f, indent=4)
+            DatasetDict({'test': Dataset.from_list([q['generated_question'] for q in pre_questions])}).push_to_hub('nytimes_completion')
 
     with open(output_file, "w") as f:
         json.dump(pre_questions, f, indent=4)
     with open(failed_output_file, "w") as f:
         json.dump(failed, f, indent=4)
+    DatasetDict({'test': Dataset.from_list([q['generated_question'] for q in pre_questions])}).push_to_hub('nytimes_completion')
 
 
 if __name__ == "__main__":
