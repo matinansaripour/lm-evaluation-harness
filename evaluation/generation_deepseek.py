@@ -67,13 +67,13 @@ def get_instructions_mcq():
     prompt += """
         You are communicating with an API, not a user. Please output in JSON format. Begin all AI responses with the character '{' to produce valid JSON. Here is an example:
         {  
-            "Question": "<question>",
+            "question": "<question>",
             "A": "<option1> ",
             "B": "<option2>",
             "C": "<option3>",
             "D": "<option4>", 
-            "Answer": "<correct_option>",
-            "Explanation": "<explanation>"
+            "answer": "<correct_option>",
+            "explanation": "<explanation>"
         }
         """
     return prompt
@@ -114,8 +114,14 @@ def read_articles(article_data):
 
 def main():
     total_questions = 1000
-    output_file = "./deepseek_questions.json"
-    failed_output_file = "./deepseek_failed.json"
+    # output_file = "./deepseek_questions.json"
+    # failed_output_file = "./deepseek_failed.json"
+    # dataset_name = "nytimes_completion"
+    # question_type = "completion"
+    output_file = "/users/ansaripo/deepseek_questions_mcq.json"
+    failed_output_file = "/users/ansaripo/deepseek_failed_mcq.json"
+    dataset_name = "nytimes_mcq"
+    question_type = "mcq"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
 
     article_data = "/iopsstor/scratch/cscs/dfan/data/robots-txt/RawData-NYTimes/*.parquet"
@@ -123,7 +129,6 @@ def main():
     tries_number = 3
     failed = json.load(open(failed_output_file, "r")) if os.path.exists(failed_output_file) else []
     text_threshold = 512
-    question_type = "completion"
     jump_step = 13
     for i in range(0, len(processed_data), jump_step):
         data = processed_data[i]
@@ -180,7 +185,7 @@ def main():
             try:
                 json_response = json.loads(response_text)
                 if question_type == "mcq":
-                    if "Question" not in json_response or "A" not in json_response or "B" not in json_response or "C" not in json_response or "D" not in json_response or "Answer" not in json_response:
+                    if "question" not in json_response or "A" not in json_response or "B" not in json_response or "C" not in json_response or "D" not in json_response or "answer" not in json_response and json_response["answer"] not in ["A", "B", "C", "D"]:
                         continue
                 elif question_type == "completion":
                     if "full_prefix" not in json_response or "completion" not in json_response or "contradiction_0" not in json_response or "contradiction_1" not in json_response or "contradiction_2" not in json_response:
@@ -205,13 +210,13 @@ def main():
                 json.dump(pre_questions, f, indent=4)
             with open(failed_output_file, "w") as f:
                 json.dump(failed, f, indent=4)
-            DatasetDict({'test': Dataset.from_list([q['generated_question'] for q in pre_questions])}).push_to_hub('nytimes_completion')
+            DatasetDict({'test': Dataset.from_list([q['generated_question'] for q in pre_questions])}).push_to_hub(dataset_name)
 
     with open(output_file, "w") as f:
         json.dump(pre_questions, f, indent=4)
     with open(failed_output_file, "w") as f:
         json.dump(failed, f, indent=4)
-    DatasetDict({'test': Dataset.from_list([q['generated_question'] for q in pre_questions])}).push_to_hub('nytimes_completion')
+    DatasetDict({'test': Dataset.from_list([q['generated_question'] for q in pre_questions])}).push_to_hub(dataset_name)
 
 
 if __name__ == "__main__":
