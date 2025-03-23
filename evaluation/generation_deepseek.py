@@ -75,6 +75,17 @@ def get_instructions_mcq():
             "answer": "<correct_option>",
             "explanation": "<explanation>"
         }
+
+        Here is an example:
+        {
+            "question": "Which combination of factors is most critical in enabling a potential global reduction in farmland use while meeting human needs?",
+            "A": "Expansion of biofuel production and government-led reforestation programs",
+            "B": "Slowing population growth, dietary shifts away from land-intensive foods, and improved agricultural yields",
+            "C": "Increased global meat consumption paired with advanced irrigation technology",
+            "D": "Rapid population growth offset by vertical farming innovations",
+            "answer": "B",
+            "explanation": "The correct answer synthesizes three key trends from the context: 1) Slowing population growth (highlighted in the 'decoupling' analysis and the role of 'parents changing population'), 2) Dietary moderation (specifically reduced meat consumption, noted as a way to lower land pressure), and 3) Farming efficiency gains ('more intense and efficient land use'). These are explicitly identified as drivers of 'peak farmland' in multiple sections, including the study's conclusions and Ausubel's remarks. Option A incorrectly includes biofuels, which the paper identifies as a counterproductive 'wild card.' Option C contradicts the emphasis on reducing meat consumption. Option D contradicts the focus on slowing population growth."
+        }
         """
     return prompt
 
@@ -130,7 +141,7 @@ def main():
     failed = json.load(open(failed_output_file, "r")) if os.path.exists(failed_output_file) else []
     text_threshold = 512
     jump_step = 13
-    for i in range(0, len(processed_data), jump_step):
+    for i in range(1, len(processed_data), jump_step):
         data = processed_data[i]
         if data["text"] is None or len(data["text"]) < text_threshold:
             print("Skipping article with less text: ", i)
