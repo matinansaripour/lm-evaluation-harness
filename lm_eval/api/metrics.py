@@ -219,14 +219,6 @@ def exact_match_hf_evaluate(
 
     score_list = predictions == references
 
-    # for i in range(len(score_list)):
-    #     if score_list[i]:
-    #         print(f'Correct sample: {i} from {len(score_list)}')
-    #         print(f'first characters of reference: {references[i][:1024]}')
-    print(np.sum(score_list))
-    print(np.argwhere(score_list))
-    print(references[score_list])
-
     return {"exact_match": np.mean(score_list)}
 
 
