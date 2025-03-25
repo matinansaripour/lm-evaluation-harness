@@ -19,6 +19,11 @@ metric_list:
   - metric: exact_match
     aggregation: mean
     higher_is_better: true
+    ignore_case: true
+    ignore_punctuation: false
+    regexes_to_ignore:
+      - ","
+      - "\\$"
 
 
 # Metadata
