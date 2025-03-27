@@ -1,0 +1,24 @@
+
+task: nytimes_verbatim_rougeL
+
+dataset_path: "mansaripo/nytimes_verbatim"
+validation_split: 'test'
+test_split: 'test'
+
+doc_to_text: "{{input_text}}"
+doc_to_target: "{{target_text}}"
+
+generation_kwargs:
+  # max_new_tokens: 3968
+  do_sample: false
+  temperature: 0.0
+num_fewshot: 0
+
+
+metric_list:
+  - metric: !function metrics.rougeL
+    aggregation: mean
+
+# Metadata
+metadata:
+  version: 1.0

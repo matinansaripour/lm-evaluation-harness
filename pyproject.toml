@@ -39,6 +39,7 @@ dependencies = [
     "dill",
     "word2number",
     "more_itertools",
+    "rouge_score>=0.1.2",
 ]
 
 [tool.setuptools.packages.find]
