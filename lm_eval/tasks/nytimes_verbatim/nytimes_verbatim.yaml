@@ -35,6 +35,9 @@ metric_list:
   - metric: !function metrics.rougeL
     aggregation: mean
 
+  - metric: !function metrics.rougeL_abs
+    aggregation: mean
+
 # Metadata
 metadata:
   version: 1.0
