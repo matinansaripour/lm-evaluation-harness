@@ -9,7 +9,7 @@ from datasets import Dataset, DatasetDict
 
 MODEL_NAME = "deepseek-reasoner"
 
-api_key = "sk-6ed901e413b949a78225b4057ae52983"
+api_key = ""
 # headers = {
 #     "Content-Type": "application/json",
 #     "Authorization": f"Bearer {api_key}"
