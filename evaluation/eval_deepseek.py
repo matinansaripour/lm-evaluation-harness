@@ -16,21 +16,22 @@ api_key = "sk-6ed901e413b949a78225b4057ae52983"
 # }
 client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
+
 def get_instructions(question_data, article):
     prompt = f"""Answer the following multiple choice question based on the given article by just outputting the letter of the correct answer. For example, if the correct answer is A, just output A.
-    
+
     Article:
     {article}
-    
+
     Question:
     {question_data["question"]}
-    
+
     Options:
     A. {question_data["A"]}
     B. {question_data["B"]}
     C. {question_data["C"]}
     D. {question_data["D"]}
-    
+
     Your answer:"""
     return prompt
 
@@ -54,19 +55,27 @@ def read_articles(article_data):
 
 
 def main():
-
     output_file = "/users/ansaripo/deepseek_questions_mcq.json"
     output_file_eval = "/users/ansaripo/deepseek_questions_mcq_eval.json"
     failed_output_file = "/users/ansaripo/deepseek_failed_mcq_eval.json"
     dataset_name = "nytimes_mcq_eval"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
+    final_answers = json.load(open(output_file_eval, "r")) if os.path.exists(output_file_eval) else []
 
     article_data = "/iopsstor/scratch/cscs/dfan/data/robots-txt/RawData-NYTimes/*.parquet"
     processed_data = read_articles(article_data)
     tries_number = 3
     failed = json.load(open(failed_output_file, "r")) if os.path.exists(failed_output_file) else []
-    final_answers = []
     for q in pre_questions:
+        print("processing: ", q['index'])
+        for pre in final_answers:
+            check_ = False
+            if pre['index'] == q['index']:
+                print("already evaluated")
+                check_ = True
+                break
+        if check_:
+            continue
         data = processed_data[int(q['index'])]
         print('processed data: ', len(final_answers))
 
@@ -85,11 +94,11 @@ def main():
 
             try:
                 response_text = response.choices[0].message.content
+                response_text = response_text.strip()[-1]
             except:
                 continue
             if response_text is None:
                 continue
-            response_text = response_text.strip()[-1]
             print(response_text)
             if response_text not in ['A', 'B', 'C', 'D']:
                 continue
@@ -118,3 +127,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

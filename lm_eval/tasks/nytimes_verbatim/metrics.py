@@ -1,9 +1,20 @@
 from typing import List, Tuple, Dict, Any, Union
 
+from rouge_score import rouge_scorer
 
-# Python code to implement the approach
 
-# Function to implement rolling hash
+def rougeL(references, predictions, **kwargs):
+	scores = []
+	for pred, ref in zip(predictions, references):
+		pred = pred.strip()
+		ref = ref.strip()
+		pred = " ".join(pred.split())
+		ref = " ".join(ref.split())
+		scores.append(float(rouge_scorer.RougeScorer(['rougeL']).score(ref, pred)['rougeL'].fmeasure) * 100.0)
+
+	# return the average score
+	return sum(scores) / len(scores)
+
 class ComputeHash:
 
 	# Generates hash in O(n(log(n)))
