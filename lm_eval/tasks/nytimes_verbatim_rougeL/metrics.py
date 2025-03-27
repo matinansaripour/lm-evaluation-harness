@@ -10,7 +10,7 @@ def rougeL(references, predictions, **kwargs):
         ref = ref.strip()
         pred = " ".join(pred.split())
         ref = " ".join(ref.split())
-        scores.append(float(rouge_scorer.RougeScorer(['rougeL']).score(ref, pred)['rougeL'].fmeasure))
+        scores.append(float(rouge_scorer.RougeScorer(['rougeL']).score(ref, pred)['rougeL'].fmeasure) * 100.0)
     
     # return the average score
     return sum(scores) / len(scores)
