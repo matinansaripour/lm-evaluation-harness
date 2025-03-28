@@ -1,0 +1,38 @@
+
+task: nytimes_arbitrary_verbatim
+
+dataset_path: "mansaripo/nytimes_arbitrary_verbatim"
+validation_split: 'test'
+test_split: 'test'
+
+doc_to_text: "{{input_text}}"
+doc_to_target: "{{target_text}}"
+
+generation_kwargs:
+  # max_new_tokens: 3968
+  do_sample: false
+  temperature: 0.0
+num_fewshot: 0
+
+
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+    ignore_case: true
+    ignore_punctuation: false
+    regexes_to_ignore:
+      - ","
+      - "\\$"
+  - metric: bleu
+    aggregation: bleu
+    higher_is_better: true
+    # n_gram: 4  # BLEU-4
+  - metric: !function metrics.lccs_ref
+    aggregation: mean
+    higher_is_better: true
+
+
+# Metadata
+metadata:
+  version: 1.0

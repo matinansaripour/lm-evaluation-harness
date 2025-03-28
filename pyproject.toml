@@ -40,6 +40,7 @@ dependencies = [
     "word2number",
     "more_itertools",
     "rouge_score>=0.1.2",
+    "pylcs"
 ]
 
 [tool.setuptools.packages.find]
