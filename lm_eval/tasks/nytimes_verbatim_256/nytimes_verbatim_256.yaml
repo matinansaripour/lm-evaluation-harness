@@ -38,11 +38,11 @@ metric_list:
   - metric: !function metrics.rougeL_abs
     aggregation: mean
 
-  - metric: !function metrics.rougeL_abs_token
-    aggregation: mean
-
-  - metric: !function metrics.lccs_token
-    aggregation: mean
+#  - metric: !function metrics.rougeL_abs_token
+#    aggregation: mean
+#
+#  - metric: !function metrics.lccs_token
+#    aggregation: mean
 
 # Metadata
 metadata:
