@@ -6,6 +6,8 @@ import requests
 from openai import OpenAI
 from datasets import load_dataset
 from datasets import Dataset, DatasetDict
+from huggingface_hub import login
+
 
 MODEL_NAME = "deepseek-reasoner"
 
@@ -16,27 +18,25 @@ api_key = ""
 # }
 client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
-def get_instructions(question_data, article):
-    prompt = f"""Answer the following multiple choice question based on the given article by just outputting the letter of the correct answer. For example, if the correct answer is A, just output A.
-    
-    Article:
-    {article}
-    
+
+def get_instructions(question_data):
+    prompt = f"""Answer the following multiple choice question by just outputting the letter of the correct answer. For example, if the correct answer is A, just output A.
+
     Question:
     {question_data["question"]}
-    
+
     Options:
     A. {question_data["A"]}
     B. {question_data["B"]}
     C. {question_data["C"]}
     D. {question_data["D"]}
-    
+
     Your answer:"""
     return prompt
 
 
-def prepare_mcq_generation_data(page_data, question_data):
-    return get_instructions(question_data, page_data["text"])
+def prepare_mcq_generation_data(question_data):
+    return get_instructions(question_data)
 
 
 def create_gpt_message(prompt):
@@ -48,38 +48,31 @@ def create_gpt_message(prompt):
     return messages
 
 
-def read_articles(article_data):
-    dataset = load_dataset("parquet", data_files=article_data)
-    return dataset['train']
-
-
 def main():
-
+    hf_token = ''
+    login(token=hf_token)
     output_file = "/users/ansaripo/deepseek_questions_mcq.json"
-    output_file_eval = "/users/ansaripo/deepseek_questions_mcq_eval.json"
-    failed_output_file = "/users/ansaripo/deepseek_failed_mcq_eval.json"
-    dataset_name = "nytimes_mcq_eval"
+    output_file_eval = "/users/ansaripo/deepseek_questions_mcq_eval2.json"
+    failed_output_file = "/users/ansaripo/deepseek_failed_mcq_eval2.json"
+    dataset_name = "nytimes_mcq_eval_blind"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
     final_answers = json.load(open(output_file_eval, "r")) if os.path.exists(output_file_eval) else []
 
-    article_data = "/iopsstor/scratch/cscs/dfan/data/robots-txt/RawData-NYTimes/*.parquet"
-    processed_data = read_articles(article_data)
     tries_number = 3
     failed = json.load(open(failed_output_file, "r")) if os.path.exists(failed_output_file) else []
     for q in pre_questions:
         print("processing: ", q['index'])
+        check_ = False
         for pre in final_answers:
-            check_ = False
             if pre['index'] == q['index']:
                 print("already evaluated")
                 check_ = True
                 break
         if check_:
             continue
-        data = processed_data[int(q['index'])]
         print('processed data: ', len(final_answers))
 
-        prompt = prepare_mcq_generation_data(data, q['generated_question'])
+        prompt = prepare_mcq_generation_data(q['generated_question'])
 
         messages = create_gpt_message(prompt)
 
@@ -100,6 +93,7 @@ def main():
                     response_text = response_.strip()[-1]
                 if response_text not in ['A', 'B', 'C', 'D']:
                     response_text = response_.strip()[0]
+                
             except:
                 continue
             if response_text is None:
