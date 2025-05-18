@@ -1,10 +1,6 @@
-import requests
 import os
 import json
-import random
-import requests
 from openai import OpenAI
-from datasets import load_dataset
 from datasets import Dataset, DatasetDict
 from huggingface_hub import login
 
@@ -51,10 +47,10 @@ def create_gpt_message(prompt):
 def main():
     hf_token = ''
     login(token=hf_token)
-    output_file = "/users/ansaripo/deepseek_questions_mcq.json"
-    output_file_eval = "/users/ansaripo/gpt_questions_mcq_eval.json"
-    failed_output_file = "/users/ansaripo/gpt_failed_mcq_eval.json"
-    dataset_name = "nytimes_mcq_eval_blind_gpt"
+    output_file = "/Users/lsir/lm-evaluation-harness/evaluation/deepseek_questions_mcq_2023_2024.json"
+    output_file_eval = "/Users/lsir/lm-evaluation-harness/evaluation/gpt4o_questions_mcq_eval_blind.json"
+    failed_output_file = "/Users/lsir/lm-evaluation-harness/evaluation/gpt4o_failed_mcq_eval_blind.json"
+    dataset_name = "nytimes_mcq_2023_2024_eval_blind_gpt4o"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
     final_answers = json.load(open(output_file_eval, "r")) if os.path.exists(output_file_eval) else []
 
@@ -86,8 +82,13 @@ def main():
             )
 
             try:
-                response_text = response.choices[0].message.content
-                response_text = response_text.strip()[-1]
+                response_ = response.choices[0].message.content
+                if len(response_) > 1 and response_[-1] == '.':
+                    response_text = response_.strip()[-2]
+                else:
+                    response_text = response_.strip()[-1]
+                if response_text not in ['A', 'B', 'C', 'D']:
+                    response_text = response_.strip()[0]
             except:
                 continue
             if response_text is None:

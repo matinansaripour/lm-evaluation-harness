@@ -1,8 +1,5 @@
-import requests
 import os
 import json
-import random
-import requests
 from openai import OpenAI
 from datasets import load_dataset
 from datasets import Dataset, DatasetDict
@@ -121,25 +118,35 @@ def read_articles(article_data):
     dataset = load_dataset("parquet", data_files=article_data)
     return dataset['train']
 
+def read_articles_jsonl(article_data):
+    data = []
+    with open(article_data, "r") as f:
+        for line in f:
+            data.append(json.loads(line))
+    # convert to dataset
+    dataset = Dataset.from_list(data)
+    return dataset
+
 def main():
     total_questions = 1000
     # output_file = "./deepseek_questions.json"
     # failed_output_file = "./deepseek_failed.json"
     # dataset_name = "nytimes_completion"
     # question_type = "completion"
-    output_file = "/users/ansaripo/deepseek_questions_mcq.json"
-    failed_output_file = "/users/ansaripo/deepseek_failed_mcq.json"
-    dataset_name = "nytimes_mcq"
+    output_file = "/nfs/scistore16/krishgrp/mansarip/Jupyter/deepseek_questions_mcq_2023_2024.json"
+    failed_output_file = "/nfs/scistore16/krishgrp/mansarip/Jupyter/deepseek_failed_mcq_2023_2024.json"
+    dataset_name = "nytimes_mcq_2023_2024"
     question_type = "mcq"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
 
-    article_data = "/iopsstor/scratch/cscs/dfan/data/robots-txt/RawData-NYTimes/*.parquet"
-    processed_data = read_articles(article_data)
+    # article_data = "/iopsstor/scratch/cscs/dfan/data/robots-txt/RawData-NYTimes/*.parquet"
+    article_data = "/nfs/scistore16/krishgrp/mansarip/Jupyter/1000_mcq_news_23_24.jsonl"
+    processed_data = read_articles_jsonl(article_data)
     tries_number = 3
     failed = json.load(open(failed_output_file, "r")) if os.path.exists(failed_output_file) else []
     text_threshold = 512
-    jump_step = 13
-    for i in range(1, len(processed_data), jump_step):
+    jump_step = 1
+    for i in range(0, len(processed_data), jump_step):
         data = processed_data[i]
         if data["text"] is None or len(data["text"]) < text_threshold:
             print("Skipping article with less text: ", i)
@@ -161,11 +168,15 @@ def main():
         for tr_num in range(tries_number):
             print(f'try {tr_num}')
             # response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=req)
-            response = client.chat.completions.create(
-                model=MODEL_NAME,
-                messages=messages,
-                # stream=False
-            )
+            try:
+                response = client.chat.completions.create(
+                    model=MODEL_NAME,
+                    messages=messages,
+                    # stream=False
+                )
+            except Exception as e:
+                print(e)
+                break
 
             # try:
             #     response = response.json()

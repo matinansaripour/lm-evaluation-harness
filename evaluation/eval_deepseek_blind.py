@@ -51,10 +51,10 @@ def create_gpt_message(prompt):
 def main():
     hf_token = ''
     login(token=hf_token)
-    output_file = "/users/ansaripo/deepseek_questions_mcq.json"
-    output_file_eval = "/users/ansaripo/deepseek_questions_mcq_eval2.json"
-    failed_output_file = "/users/ansaripo/deepseek_failed_mcq_eval2.json"
-    dataset_name = "nytimes_mcq_eval_blind"
+    output_file = "/nfs/scistore16/krishgrp/mansarip/Jupyter/deepseek_questions_mcq_2023_2024.json"
+    output_file_eval = "/nfs/scistore16/krishgrp/mansarip/Jupyter/deepseek_questions_mcq_eval_blind_2023_2024.json"
+    failed_output_file = "/nfs/scistore16/krishgrp/mansarip/Jupyter/deepseek_failed_mcq_eval_blind_2023_2024.json"
+    dataset_name = "nytimes_mcq_2023_2024_eval_blind_deepseek"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
     final_answers = json.load(open(output_file_eval, "r")) if os.path.exists(output_file_eval) else []
 

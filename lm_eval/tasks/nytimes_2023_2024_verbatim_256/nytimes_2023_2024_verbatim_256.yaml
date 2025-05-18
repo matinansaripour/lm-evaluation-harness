@@ -1,7 +1,7 @@
 
-task: nytimes_verbatim
+task: nytimes_2023_2024_verbatim_256
 
-dataset_path: "mansaripo/nytimes_verbatim"
+dataset_path: "mansaripo/nytimes_2023_2024_verbatim_256"
 validation_split: 'test'
 test_split: 'test'
 
@@ -32,11 +32,11 @@ metric_list:
     aggregation: mean
     higher_is_better: true
 
-  # - metric: !function metrics.rougeL
-  #   aggregation: mean
-
-  # - metric: !function metrics.rougeL_abs
-  #   aggregation: mean
+#  - metric: !function metrics.rougeL
+#    aggregation: mean
+#
+#  - metric: !function metrics.rougeL_abs
+#    aggregation: mean
 
 #  - metric: !function metrics.rougeL_abs_token
 #    aggregation: mean

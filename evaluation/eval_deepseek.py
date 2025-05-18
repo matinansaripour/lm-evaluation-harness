@@ -6,6 +6,8 @@ import requests
 from openai import OpenAI
 from datasets import load_dataset
 from datasets import Dataset, DatasetDict
+from huggingface_hub import login
+
 
 MODEL_NAME = "deepseek-reasoner"
 
@@ -52,24 +54,34 @@ def read_articles(article_data):
     dataset = load_dataset("parquet", data_files=article_data)
     return dataset['train']
 
+def read_articles_jsonl(article_data):
+    data = []
+    with open(article_data, "r") as f:
+        for line in f:
+            data.append(json.loads(line))
+    # convert to dataset
+    dataset = Dataset.from_list(data)
+    return dataset
 
 def main():
-
-    output_file = "/users/ansaripo/deepseek_questions_mcq.json"
-    output_file_eval = "/users/ansaripo/deepseek_questions_mcq_eval.json"
-    failed_output_file = "/users/ansaripo/deepseek_failed_mcq_eval.json"
-    dataset_name = "nytimes_mcq_eval"
+    hf_token = ''
+    login(token=hf_token)
+    output_file = "/users/ansaripo/deepseek_questions_mcq_2023_2024.json"
+    output_file_eval = "/users/ansaripo/deepseek_questions_mcq_eval_2023_2024.json"
+    failed_output_file = "/users/ansaripo/deepseek_failed_mcq_eval_2023_2024.json"
+    dataset_name = "nytimes_mcq_2023_2024_eval_deepseek"
     pre_questions = json.load(open(output_file, "r")) if os.path.exists(output_file) else []
     final_answers = json.load(open(output_file_eval, "r")) if os.path.exists(output_file_eval) else []
 
-    article_data = "/iopsstor/scratch/cscs/dfan/data/robots-txt/RawData-NYTimes/*.parquet"
-    processed_data = read_articles(article_data)
+    article_data = "/users/ansaripo/1000_mcq_news_23_24.jsonl"
+    # processed_data = read_articles(article_data)
+    processed_data = read_articles_jsonl(article_data)
     tries_number = 3
     failed = json.load(open(failed_output_file, "r")) if os.path.exists(failed_output_file) else []
     for q in pre_questions:
         print("processing: ", q['index'])
+        check_ = False
         for pre in final_answers:
-            check_ = False
             if pre['index'] == q['index']:
                 print("already evaluated")
                 check_ = True

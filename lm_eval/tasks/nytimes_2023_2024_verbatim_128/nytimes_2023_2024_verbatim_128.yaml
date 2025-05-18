@@ -1,7 +1,7 @@
 
-task: nytimes_verbatim
+task: nytimes_2023_2024_verbatim_128
 
-dataset_path: "mansaripo/nytimes_verbatim"
+dataset_path: "mansaripo/nytimes_2023_2024_verbatim_128"
 validation_split: 'test'
 test_split: 'test'
 
