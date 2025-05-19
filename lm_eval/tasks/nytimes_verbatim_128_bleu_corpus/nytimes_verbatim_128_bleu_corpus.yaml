@@ -1,5 +1,5 @@
 
-task: nytimes_verbatim_bleu_corpus
+task: nytimes_verbatim_128_bleu_corpus
 
 dataset_path: "mansaripo/nytimes_verbatim"
 validation_split: 'test'
