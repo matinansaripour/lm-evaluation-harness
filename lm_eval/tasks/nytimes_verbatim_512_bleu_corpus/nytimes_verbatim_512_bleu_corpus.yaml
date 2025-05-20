@@ -16,8 +16,11 @@ num_fewshot: 0
 
 
 metric_list:
-  - metric: bleu_corpus_512
-    aggregation: bleu_corpus_512
+  - metric: bleu_corpus
+    aggregation: bleu_corpus
+    higher_is_better: true
+  - metric: precision_4gram_corpus
+    aggregation: precision_4gram_corpus
     higher_is_better: true
 
 

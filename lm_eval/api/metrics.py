@@ -87,8 +87,8 @@ def bleu(items):
     refs, preds = _sacreformat(refs, preds)
     return sacrebleu.corpus_bleu(preds, refs).score
 
-@register_aggregation("bleu_corpus_128")
-def bleu_corpus_128(items):
+@register_aggregation("bleu_corpus")
+def bleu_corpus(items):
     """The Bilingual Evaluation Understudy Score, or BLEU for short, is a metric
     for evaluating a generated sentence to a reference sentence. It counts matching
     n-grams in the candidate translation to n-grams in the reference text, where
@@ -102,34 +102,15 @@ def bleu_corpus_128(items):
     refs = list(zip(*items))[0]
     preds = list(zip(*items))[1]
     refs, preds = _sacreformat(refs, preds)
-    metric = sacrebleu.corpus_bleu(preds, refs, smooth_method="none")
-    # save the metric to a file with random id as pickle
-    import pickle
-    with open(f"/iopsstor/scratch/cscs/ansaripo/data/bleu_corpus_128_{random.randint(0, 100000000)}.pkl", "wb") as f:
-        pickle.dump(metric, f)
-    return metric.score
+    return sacrebleu.corpus_bleu(preds, refs, smooth_method="none").score
 
-@register_aggregation("bleu_corpus_256")
-def bleu_corpus_256(items):
+@register_aggregation("precision_4gram_corpus")
+def precision_4gram_corpus(items):
     refs = list(zip(*items))[0]
     preds = list(zip(*items))[1]
     refs, preds = _sacreformat(refs, preds)
-    metric = sacrebleu.corpus_bleu(preds, refs, smooth_method="none")
-    import pickle
-    with open(f"/iopsstor/scratch/cscs/ansaripo/data/bleu_corpus_256_{random.randint(0, 100000000)}.pkl", "wb") as f:
-        pickle.dump(metric, f)
-    return metric.score
+    return sacrebleu.corpus_bleu(preds, refs, smooth_method="none").precisions[3]
 
-@register_aggregation("bleu_corpus_512")
-def bleu_corpus_512(items):
-    refs = list(zip(*items))[0]
-    preds = list(zip(*items))[1]
-    refs, preds = _sacreformat(refs, preds)
-    metric = sacrebleu.corpus_bleu(preds, refs, smooth_method="none")
-    import pickle
-    with open(f"/iopsstor/scratch/cscs/ansaripo/data/bleu_corpus_512_{random.randint(0, 100000000)}.pkl", "wb") as f:
-        pickle.dump(metric, f)
-    return metric.score
 
 @register_aggregation("chrf")
 def chrf(items):
@@ -372,30 +353,21 @@ def bleu_fn(items):  # This is a passthrough function
     return items
 
 @register_metric(
-    metric="bleu_corpus_128",
+    metric="bleu_corpus",
     higher_is_better=True,
     output_type="generate_until",
-    aggregation="bleu_corpus_128",
+    aggregation="bleu_corpus",
 )
-def bleu_corpus_128_fn(items):  # This is a passthrough function
+def bleu_corpus_fn(items):  # This is a passthrough function
     return items
 
 @register_metric(
-    metric="bleu_corpus_256",
+    metric="precision_4gram_corpus",
     higher_is_better=True,
     output_type="generate_until",
-    aggregation="bleu_corpus_256",
+    aggregation="precision_4gram_corpus",
 )
-def bleu_corpus_256_fn(items):  # This is a passthrough function
-    return items
-
-@register_metric(
-    metric="bleu_corpus_512",
-    higher_is_better=True,
-    output_type="generate_until",
-    aggregation="bleu_corpus_512",
-)
-def bleu_corpus_512_fn(items):  # This is a passthrough function
+def precision_4gram_corpus_fn(items):  # This is a passthrough function
     return items
 
 @register_metric(

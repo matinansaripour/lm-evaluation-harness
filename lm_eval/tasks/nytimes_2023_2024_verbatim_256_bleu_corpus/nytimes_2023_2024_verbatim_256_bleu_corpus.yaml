@@ -1,7 +1,6 @@
+task: nytimes_2023_2024_verbatim_256_bleu_corpus
 
-task: nytimes_verbatim_128_bleu_corpus
-
-dataset_path: "mansaripo/nytimes_verbatim"
+dataset_path: "mansaripo/nytimes_2023_2024_verbatim_256"
 validation_split: 'test'
 test_split: 'test'
 
