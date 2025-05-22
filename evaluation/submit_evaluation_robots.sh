@@ -3,12 +3,12 @@ GPUS_PER_NODE=4
 
 DEF_MEGATRON_PATH=$(dirname $(dirname $( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )))  # Grandparent of current file location.
 DEF_LOGS_ROOT=$PWD/eval-logs
-DEF_CONTAINER_PATH=/iopsstor/scratch/cscs/ansaripo/ngc_pt_jan.toml
-DEF_ACCOUNT=a-a06
+DEF_CONTAINER_PATH=/iopsstor/scratch/cscs/ansaripo/Megatron-LM/container/ngc_pt_jan.toml
+DEF_ACCOUNT=a-infra01-1
 DEF_TOKENIZER=alehc/swissai-tokenizer
 
 ITERATIONS=(latest)
-TASKS=scripts/evaluation/robots_eval
+TASKS=scripts/evaluation/robots_eval2
 LIMIT=null
 BS=1
 CONVERT_TO_HF=false
@@ -296,7 +296,7 @@ EOM
 # Now let's prepare the sbatch.
 cat > $SBATCH_PATH <<- EOM
 #!/bin/bash
-#SBATCH --account=a-a06
+#SBATCH --account=a-infra01-1
 #SBATCH --cpus-per-task=288
 #SBATCH --gres=gpu:4
 #SBATCH --environment=$CONTAINER_PATH
@@ -306,7 +306,7 @@ cat > $SBATCH_PATH <<- EOM
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=$LOGS_DIR/${JOBNAME}_%j.out
 #SBATCH --error=$LOGS_DIR/${JOBNAME}_%j.err
-#SBATCH --time=10:00:00
+#SBATCH --time=12:00:00
 #SBATCH --exclusive
 #SBATCH --dependency=singleton
 

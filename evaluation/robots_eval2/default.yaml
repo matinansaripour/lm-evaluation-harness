@@ -10,12 +10,12 @@ task:
   # - nytimes_verbatim_512
   # - nytimes_mcq
   # - nytimes_completion
-  - nytimes_verbatim_128_bleu_corpus
-  - nytimes_verbatim_256_bleu_corpus
-  - nytimes_verbatim_512_bleu_corpus
-  # - nytimes_2023_2024_verbatim_128_bleu_corpus
-  # - nytimes_2023_2024_verbatim_256_bleu_corpus
-  # - nytimes_2023_2024_verbatim_512_bleu_corpus
+  # - nytimes_verbatim_128_bleu_corpus
+  # - nytimes_verbatim_256_bleu_corpus
+  # - nytimes_verbatim_512_bleu_corpus
+  - nytimes_2023_2024_verbatim_128_bleu_corpus
+  - nytimes_2023_2024_verbatim_256_bleu_corpus
+  - nytimes_2023_2024_verbatim_512_bleu_corpus
 
 metadata:
   version: 1.0
